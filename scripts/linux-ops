@@ -1,0 +1,19 @@
+#!/bin/sh
+set -e
+
+export PYTHONPATH="src:$PYTHONPATH"
+
+COMMAND=$1
+
+case "$COMMAND" in
+    health)
+        python3 -m linux_ops.commands.health
+        ;;
+    inventory)
+        python3 -m linux_ops.commands.inventory
+        ;;
+    *)
+        echo "Uso: $0 {health|inventory}"
+        exit 1
+        ;;
+esac
