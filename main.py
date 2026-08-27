@@ -4,7 +4,14 @@ import os
 from datetime import datetime
 import psutil
 
-print ( "= = = LINUX-OPS CLI = = =" )
+# Definicion de colores ANSI para la consola
+RESET = "\033[0m"
+VERDE = "\033[92m"
+AMARILLO = "\033[93m"
+ROJO = "\033[91m"
+CIAN = "\033[96m"
+
+print ( f"{CIAN}= = = LINUX-OPS CLI = = ={RESET}" )
 
 
 # Capturamos la fecha y hora actual exacta
@@ -55,6 +62,6 @@ if "--json" in sys.argv:
    with open ( archivo_log, "w" ) as archivo:
        json.dump ( historial, archivo, indent=4 )
 
-   print ( "¡Reporte guardado exitosamente en reporte.json!" )
+   print ( f"\n¡Lectura registrada acumulativamente en {archivo_log}!" )
 else:
-   print ( "Tip: Usa '--json' para exportar los resultados a un archivo." )
+   print ( f"\nTip: Usa '--json' para exportar los resultados a un archivo." )
