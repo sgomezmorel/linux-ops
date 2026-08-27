@@ -1,5 +1,6 @@
 import json
 import sys
+import os
 from datetime import datetime
 import psutil
 
@@ -22,24 +23,38 @@ if cpu_val >= 80 or ram_val >= 80:
 elif cpu_val >= 65 or ram_val >= 65:
     estado_sistema = "WARNING"
 
-# 1. Creamos la estructura de datos
-datos_sistema = {
+# Creamos la estructura de datos
+lectura_actual = {
     "timestamp": fecha_actual,
     "estado": estado_sistema,
     "cpu_uso": f"{cpu_val}%",
     "ram_uso": f"{ram_val}%"
 }
 
-print ( " Datos recolectados:", datos_sistema )
+print ( " Datos recolectados:", lectura_actual )
 
-# 2. Guardamos el diccionario dentro de un archivo JSON
-
+# Guardamos el diccionario dentro de un archivo JSON
 if "--json" in sys.argv:
-    with open ( "reporte.json", "w" ) as archivo:
-        json.dump ( datos_sistema, archivo, indent=4 )
+   archivo_log = "reporte.json"
+   historial = []
 
-    print ( "¡Reporte guardado exitosamente en reporte.json!" )
+   # Si el archivo ya eciste y tiene contenido, leemos el historial previo
+   if os.path.exists ( archivo_log ):
+       try:
+           with open ( archivo_log, "r" ) as archivo:
+               historial = json.load ( archivo )
+               if not isinstance ( historial, list ):
+                   historial = [ historial ]
+       except json.JSONDecodeError:
+           historial = []
+
+   # Anexamos la nueva lectura a la lista
+   historial.append ( lectura_actual )
+
+   # Guardamos la lista completa de registros
+   with open ( archivo_log, "w" ) as archivo:
+       json.dump ( historial, archivo, indent=4 )
+
+   print ( "¡Reporte guardado exitosamente en reporte.json!" )
 else:
-    print ( "Tip: Usa '--json' para exportar los resultados a un archivo." )
-
-
+   print ( "Tip: Usa '--json' para exportar los resultados a un archivo." )
