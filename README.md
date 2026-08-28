@@ -1,19 +1,3 @@
-# linux-ops
-
-A lightweight CLI monitoring tool built with Python for Linux systems.
-
-## Features
-- **System Health:** Quick check of CPU Load, RAM, and Disk usage with alert thresholds.
-- **Hardware Inventory:** Summarizes Linux kernel version, uptime, and system specifications directly from `/proc`.
-- **Easy Execution:** Includes a local launcher script for seamless execution.
-
-## Installation & Usage
-
-1. Clone the repository:
-   ```bash
-   git clone [https://github.com/sgomezmorel/linux-ops.git](https://github.com/sgomezmorel/linux-ops.git)
-   cd linux-ops
-
 # 🐧 Linux-Ops CLI
 
 ![Python](https://img.shields.io/badge/Python-3.x-blue?style=for-the-badge&logo=python)
@@ -44,10 +28,12 @@ Una herramienta de línea de comandos (CLI) unificada y ligera para el **monitor
 * **Formato de Configuración:** `.desktop` Entry Specifications (XDG Desktop Entry)
 
 ---
-
+  
 ## 🚀 Instalación y Uso
 
 ### 1. Clonar el repositorio
 ```bash
 git clone [https://github.com/TU_USUARIO/linux-ops.git](https://github.com/TU_USUARIO/linux-ops.git)
 cd linux-ops
+
+# linux-ops
