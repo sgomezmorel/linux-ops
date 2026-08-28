@@ -1,0 +1,116 @@
+[
+    {
+        "timestamp": "2026-08-27 19:17:24",
+        "estado": "OK",
+        "cpu_uso": "2.1%",
+        "ram_uso": "43.1%"
+    },
+    {
+        "timestamp": "2026-08-27 19:17:25",
+        "estado": "OK",
+        "cpu_uso": "1.0%",
+        "ram_uso": "43.1%"
+    },
+    {
+        "timestamp": "2026-08-27 19:35:40",
+        "estado": "OK",
+        "cpu_uso": "2.1%",
+        "ram_uso": "43.4%"
+    },
+    {
+        "timestamp": "2026-08-27 19:47:10",
+        "estado": "OK",
+        "cpu_uso": "2.0%",
+        "ram_uso": "38.5%"
+    },
+    {
+        "timestamp": "2026-08-27 21:10:41",
+        "estado": "OK",
+        "cpu_uso": "1.0%",
+        "ram_uso": "41.9%"
+    },
+    {
+        "timestamp": "2026-08-27 22:25:26",
+        "estado": "WARNING",
+        "cpu_carga_1min": 0.00048828125,
+        "ram_uso": "40.2%",
+        "disco_uso": "66.3%"
+    },
+    {
+        "timestamp": "2026-08-27 22:31:33",
+        "estado": "WARNING",
+        "cpu_carga_1min": 0.01513671875,
+        "ram_uso": "41.1%",
+        "disco_uso": "66.3%"
+    },
+    {
+        "timestamp": "2026-08-27 22:32:18",
+        "estado": "WARNING",
+        "cpu_carga_1min": 0.00537109375,
+        "ram_uso": "40.5%",
+        "disco_uso": "66.3%"
+    },
+    {
+        "timestamp": "2026-08-27 22:34:08",
+        "estado": "WARNING",
+        "cpu_carga_1min": 0.71435546875,
+        "ram_uso": "39.7%",
+        "disco_uso": "66.3%"
+    },
+    {
+        "timestamp": "2026-08-27 22:36:59",
+        "estado": "WARNING",
+        "cpu_carga_1min": 0.173828125,
+        "ram_uso": "39.5%",
+        "disco_uso": "66.3%"
+    },
+    {
+        "timestamp": "2026-08-27 22:37:10",
+        "estado": "WARNING",
+        "cpu_carga_1min": 0.146484375,
+        "ram_uso": "40.8%",
+        "disco_uso": "66.3%"
+    },
+    {
+        "timestamp": "2026-08-27 22:37:58",
+        "estado": "WARNING",
+        "cpu_carga_1min": 0.0615234375,
+        "ram_uso": "39.3%",
+        "disco_uso": "66.3%"
+    },
+    {
+        "timestamp": "2026-08-27 22:38:45",
+        "estado": "WARNING",
+        "cpu_carga_1min": 0.02734375,
+        "ram_uso": "39.5%",
+        "disco_uso": "66.3%"
+    },
+    {
+        "timestamp": "2026-08-27 22:39:39",
+        "estado": "WARNING",
+        "cpu_carga_1min": 0.0087890625,
+        "ram_uso": "39.6%",
+        "disco_uso": "66.3%"
+    },
+    {
+        "timestamp": "2026-08-27 22:41:09",
+        "estado": "WARNING",
+        "cpu_carga_1min": 0.0,
+        "ram_uso": "39.8%",
+        "disco_uso": "66.3%"
+    },
+    {
+        "timestamp": "2026-08-27 22:43:29",
+        "estado": "WARNING",
+        "cpu_carga_1min": 0.0,
+        "ram_uso": "40.1%",
+        "disco_uso": "66.3%"
+    },
+    {
+        "timestamp": "2026-08-27 23:28:21",
+        "estado": "WARNING",
+        "cpu_carga_1min": 0.0,
+        "ram_uso": "40.4%",
+        "disco_uso": "66.3%"
+    }
+]

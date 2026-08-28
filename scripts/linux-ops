@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
 export PYTHONPATH="src:$PYTHONPATH"
@@ -13,7 +13,6 @@ case "$COMMAND" in
         python3 -m linux_ops.commands.inventory
         ;;
     *)
-        echo "Uso: $0 {health|inventory}"
-        exit 1
+        python3 /home/santiago/linux-ops/main.py
         ;;
 esac
