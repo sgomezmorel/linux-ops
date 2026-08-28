@@ -112,5 +112,47 @@
         "cpu_carga_1min": 0.0,
         "ram_uso": "40.4%",
         "disco_uso": "66.3%"
+    },
+    {
+        "timestamp": "2026-08-27 23:31:32",
+        "estado": "WARNING",
+        "cpu_carga_1min": 0.10009765625,
+        "ram_uso": "40.2%",
+        "disco_uso": "66.3%"
+    },
+    {
+        "timestamp": "2026-08-27 23:31:38",
+        "estado": "WARNING",
+        "cpu_carga_1min": 0.31884765625,
+        "ram_uso": "40.3%",
+        "disco_uso": "66.3%"
+    },
+    {
+        "timestamp": "2026-08-27 23:32:04",
+        "estado": "WARNING",
+        "cpu_carga_1min": 0.28271484375,
+        "ram_uso": "40.4%",
+        "disco_uso": "66.3%"
+    },
+    {
+        "timestamp": "2026-08-27 23:32:34",
+        "estado": "WARNING",
+        "cpu_carga_1min": 0.169921875,
+        "ram_uso": "40.3%",
+        "disco_uso": "66.3%"
+    },
+    {
+        "timestamp": "2026-08-27 23:35:28",
+        "estado": "WARNING",
+        "cpu_carga_1min": 0.10400390625,
+        "ram_uso": "41.9%",
+        "disco_uso": "66.3%"
+    },
+    {
+        "timestamp": "2026-08-27 23:35:40",
+        "estado": "WARNING",
+        "cpu_carga_1min": 0.080078125,
+        "ram_uso": "42.1%",
+        "disco_uso": "66.3%"
     }
 ]
