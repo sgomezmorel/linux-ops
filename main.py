@@ -5,14 +5,22 @@ import subprocess
 from datetime import datetime
 import psutil
 
-# Intentamos importar módulos locales si existen; si no, los manejamos sin fallar
+# Obtener la ruta absoluta del directorio raíz del proyecto
+RUTA_BASE = os.path.dirname(os.path.abspath(__file__))
+RUTA_SRC = os.path.join(RUTA_BASE, "src")
+
+# Insertar 'src' al inicio de sys.path para garantizar que halle los módulos
+if RUTA_SRC not in sys.path:
+    sys.path.insert(0, RUTA_SRC)
+
+# Intentar la importación con la ruta completa del paquete
 try:
-    import inventory
+    from linux_ops.commands import inventory
 except ImportError:
     inventory = None
 
 try:
-    import health
+    from linux_ops.commands import health
 except ImportError:
     health = None
 
@@ -34,11 +42,12 @@ def obtener_modelo_cpu():
 
 def ejecutar_linux_ops():
     # Header Principal
-    print(f"{CIAN}========================================={RESET}")
-    print(f"{CIAN}            LINUX-OPS CLI                {RESET}")
-    print(f"{CIAN}========================================={RESET}")
+    print(f"{CIAN}=================================================={RESET}")
+    print(f"{CIAN}                LINUX-OPS CLI                     {RESET}")
+    print(f"{CIAN}=================================================={RESET}")
 
     fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
     # 1. ESTADO DEL SISTEMA (HEALTH)
     cpu_1min = os.getloadavg()[0]
     ram_uso = psutil.virtual_memory().percent
@@ -56,17 +65,17 @@ def ejecutar_linux_ops():
         color_estado = AMARILLO
 
     print(f"\n{AZUL}= = = ESTADO DEL SISTEMA = = ={RESET}")
-    print(f"Fecha y Hora:      {fecha_actual}")
+    print(f"Fecha y Hora:    {fecha_actual}")
     print(f"Estado general: {color_estado}{estado_general}{RESET}")
     print(f"Carga CPU (1 min): {cpu_1min:.2f}")
     print(f"Uso de RAM: {ram_uso}%")
     print(f"Uso de Disco (/): {disco_uso}%")
 
     # 2. INVENTARIO DE HARDWARE
-    print(f"\n{AZUL}= = = INVENTARIO DE HARDWARE = = ={RESET}")
-    if inventory and hasattr(inventory, 'mostrar_inventario'):
-        inventory.mostrar_inventario()
+    if inventory and hasattr(inventory, 'print_friendly_inventory'):
+        inventory.print_friendly_inventory()
     else:
+        print(f"\n{AZUL}= = = INVENTARIO DE HARDWARE = = ={RESET}")
         ram_gb = round(psutil.virtual_memory().total / (1024 ** 3), 2)
         datos_inv = {
             "os": os.uname().sysname,
@@ -86,7 +95,7 @@ def ejecutar_linux_ops():
         "disco_uso": f"{disco_uso}%"
     }
 
-    archivo_log = "reporte.json"
+    archivo_log = os.path.join(RUTA_BASE, "reporte.json")
     historial = []
 
     if os.path.exists(archivo_log):
@@ -103,8 +112,7 @@ def ejecutar_linux_ops():
     with open(archivo_log, "w") as archivo:
         json.dump(historial, archivo, indent=4)
 
-    print(f"\n{VERDE}✔ Registro guardado exitosamente en {archivo_log}{RESET}\n")
-
+    print(f"\n{VERDE}✓ Registro guardado exitosamente en {archivo_log}{RESET}")
     input("Presiona Enter para cerrar...")
 
 if __name__ == "__main__":
