@@ -158,5 +158,33 @@
                 "ram_pct": 3.5
             }
         ]
+    },
+    {
+        "timestamp": "2026-09-01 17:43:01",
+        "uptime": "1h 13m",
+        "usuarios_activos": 0,
+        "estado": "WARNING",
+        "cpu_carga_1min": 0.0,
+        "ram_uso_pct": "44.6%",
+        "disco_uso_pct": "66.3%",
+        "red_mb_recibidos": 0.4,
+        "red_mb_enviados": 0.1,
+        "top_procesos_ram": [
+            {
+                "pid": 1092,
+                "nombre": "xfwm4",
+                "ram_pct": 6.7
+            },
+            {
+                "pid": 654,
+                "nombre": "Xorg",
+                "ram_pct": 6.1
+            },
+            {
+                "pid": 1006,
+                "nombre": "VBoxClient",
+                "ram_pct": 4.1
+            }
+        ]
     }
 ]
