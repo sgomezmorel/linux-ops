@@ -2,7 +2,7 @@ import json
 import sys
 import os
 import subprocess
-from datetime import datetime
+from datetime import datetime, timedelta
 import psutil
 
 # Obtener la ruta absoluta del directorio raíz del proyecto
@@ -32,6 +32,37 @@ ROJO = "\033[91m"
 CIAN = "\033[96m"
 AZUL = "\033[94m"
 
+def obtener_uptime():
+    """Calcula el tiempo de actividad del sistema en dias, horas y minutos."""
+    tiempo_boot = datetime.fromtimestamp(psutil.boot_time())
+    tiempo_activo = datetime.now() - tiempo_boot
+
+    dias = tiempo_activo.days
+    horas, rem = divmod(tiempo_activo.seconds, 3600)
+    minutos, _= divmod(rem, 60)
+
+    partes = []
+    if dias > 0:
+        partes.append(f"{dias}d")
+    if horas > 0 or dias >  0:
+        partes.append(f"{horas}h")
+    partes.append(f"{minutos}m")
+
+    return " ".join(partes)
+
+def obtener_top_procesos(limite=3):
+    """Devuelve los procesos que más memoria RAM consumen actualmente."""
+    procesos = []
+    for proc in psutil.process_iter(['pid', 'name', 'memory_percent']):
+        try:
+            procesos.append(proc.info)
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+            pass
+    
+    # Ordenar de mayor a menor consumo de RAM
+    procesos_ordenados = sorted(procesos, key=lambda x: x['memory_percent'] or 0, reverse=True)
+    return procesos_ordenados[:limite]
+
 def obtener_modelo_cpu():
     try:
         cmd = "lscpu | grep 'Model name:' | sed 's/Model name:\\s*//'"
@@ -41,35 +72,37 @@ def obtener_modelo_cpu():
         return "AMD Ryzen 7 7800X3D 8-Core Processor"
 
 def ejecutar_linux_ops():
-    # Header Principal
-    print(f"{CIAN}=================================================={RESET}")
-    print(f"{CIAN}                LINUX-OPS CLI                     {RESET}")
-    print(f"{CIAN}=================================================={RESET}")
-
+    archivo_log = os.path.join(RUTA_BASE, "reporte.json")
     fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    # 1. ESTADO DEL SISTEMA (HEALTH)
+    # Muestreo de métricas
     cpu_1min = os.getloadavg()[0]
     ram_uso = psutil.virtual_memory().percent
     disco_uso = psutil.disk_usage('/').percent
     cpu_pct = psutil.cpu_percent(interval=1)
 
-    estado_general = "OK"
-    color_estado = VERDE
+    uptime_str = obtener_uptime()
+    usuarios_activos = len(psutil.users())
+    top_proc = obtener_top_procesos(3)
 
+    # Evaluación del Estado del Sistema
     if ram_uso >= 80 or disco_uso >= 80 or cpu_pct >= 80:
         estado_general = "CRITICAL"
         color_estado = ROJO
     elif ram_uso >= 65 or disco_uso >= 65 or cpu_pct >= 65:
         estado_general = "WARNING"
         color_estado = AMARILLO
+    else:
+        estado_general = "OK"
+        color_estado = VERDE
 
-    print(f"\n{AZUL}= = = ESTADO DEL SISTEMA = = ={RESET}")
-    print(f"Fecha y Hora:    {fecha_actual}")
-    print(f"Estado general: {color_estado}{estado_general}{RESET}")
-    print(f"Carga CPU (1 min): {cpu_1min:.2f}")
-    print(f"Uso de RAM: {ram_uso}%")
-    print(f"Uso de Disco (/): {disco_uso}%")
+    # ENCABEZADO
+    print(f"\n{CIAN}=================================================={RESET}")
+    print(f"{CIAN}                LINUX-OPS CLI                     {RESET}")
+    print(f"{CIAN}=================================================={RESET}")
+    print(f" ⏱️  Fecha y Hora:    {fecha_actual}")
+    print(f" ⏳ Uptime:          {uptime_str} (Usuarios activos: {usuarios_activos})")
+    print(f" 📊 Estado general: {color_estado}{estado_general}{RESET}  (Carga CPU 1m: {cpu_1min:.2f})")
 
     # 2. INVENTARIO DE HARDWARE
     if inventory and hasattr(inventory, 'print_friendly_inventory'):
@@ -86,22 +119,32 @@ def ejecutar_linux_ops():
         }
         print(json.dumps(datos_inv, indent=2))
 
+    print(f"\n🔥TOP 3 PROCESOS (MAYOR USO DE RAM):")
+    for p in obtener_top_procesos(3):
+        nombre = p['name'] if p['name'] else "Desconocido"
+        ram_pct = p['memory_percent'] if p['memory_percent'] else 0.0
+        print(f"    • PID {p['pid']:<6} | {nombre:<22} | RAM: {ram_pct:.1f}%")
+
     # 3. GUARDADO ACUMULATIVO JSON
     lectura = {
         "timestamp": fecha_actual,
+        "uptime": uptime_str,
+        "usuarios_activos": usuarios_activos,
         "estado": estado_general,
         "cpu_carga_1min": cpu_1min,
-        "ram_uso": f"{ram_uso}%",
-        "disco_uso": f"{disco_uso}%"
+        "ram_uso_pct": f"{ram_uso}%",
+        "disco_uso_pct": f"{disco_uso}%",
+        "top_procesos_ram": [
+            {"pid": p['pid'], "nombre": p['name'], "ram_pct": round(p['memory_percent'] or 0, 1)}
+            for p in top_proc
+        ]
     }
 
-    archivo_log = os.path.join(RUTA_BASE, "reporte.json")
     historial = []
-
     if os.path.exists(archivo_log):
         try:
-            with open(archivo_log, "r") as archivo:
-                historial = json.load(archivo)
+            with open(archivo_log, "r", encoding="utf-8") as f:
+                historial = json.load(f)
                 if not isinstance(historial, list):
                     historial = [historial]
         except json.JSONDecodeError:
@@ -109,10 +152,14 @@ def ejecutar_linux_ops():
 
     historial.append(lectura)
 
-    with open(archivo_log, "w") as archivo:
-        json.dump(historial, archivo, indent=4)
+    try:
+        with open(archivo_log, "w", encoding="utf-8") as f:
+            json.dump(historial, f, indent=4, ensure_ascii=False)
 
-    print(f"\n{VERDE}✓ Registro guardado exitosamente en {archivo_log}{RESET}")
+        print(f"\n{VERDE}✓ Registro actualizado exitosamente en {archivo_log}{RESET}\n")
+    except Exception as err:
+        print(f"\n{ROJO}Error al actualizar el registro: {err}{RESET}\n")
+
     input("Presiona Enter para cerrar...")
 
 if __name__ == "__main__":
