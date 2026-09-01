@@ -71,6 +71,13 @@ def obtener_modelo_cpu():
     except Exception:
         return "AMD Ryzen 7 7800X3D 8-Core Processor"
 
+def obtener_trafico_red():
+    """Devuelve los MB recibidos y enviados por la red."""
+    io_red = psutil.net_io_counters()
+    bytes_enviados = io_red.bytes_sent / (1024 * 1024) # Bytes a MB
+    bytes_recibidos = io_red.bytes_recv / (1024 * 1024)
+    return round (bytes_recibidos, 1), round(bytes_enviados, 1)
+
 def ejecutar_linux_ops():
     archivo_log = os.path.join(RUTA_BASE, "reporte.json")
     fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -84,6 +91,10 @@ def ejecutar_linux_ops():
     uptime_str = obtener_uptime()
     usuarios_activos = len(psutil.users())
     top_proc = obtener_top_procesos(3)
+    mb_recibidos, mb_enviados = obtener_trafico_red()
+
+    # Agregar debajo de la IP de Red:
+    print(f" 🌐 Trafico de Red:    ⬇️ {mb_recibidos} MB recibidos | ⬆️ {mb_enviados} MB enviados")
 
     # Evaluación del Estado del Sistema
     if ram_uso >= 80 or disco_uso >= 80 or cpu_pct >= 80:
@@ -134,6 +145,8 @@ def ejecutar_linux_ops():
         "cpu_carga_1min": cpu_1min,
         "ram_uso_pct": f"{ram_uso}%",
         "disco_uso_pct": f"{disco_uso}%",
+        "red_mb_recibidos": mb_recibidos,
+        "red_mb_enviados": mb_enviados,
         "top_procesos_ram": [
             {"pid": p['pid'], "nombre": p['name'], "ram_pct": round(p['memory_percent'] or 0, 1)}
             for p in top_proc
