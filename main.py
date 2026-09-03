@@ -58,7 +58,7 @@ def obtener_top_procesos(limite=3):
             procesos.append(proc.info)
         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
             pass
-    
+
     # Ordenar de mayor a menor consumo de RAM
     procesos_ordenados = sorted(procesos, key=lambda x: x['memory_percent'] or 0, reverse=True)
     return procesos_ordenados[:limite]
@@ -145,8 +145,6 @@ def ejecutar_linux_ops():
     puertos_escucha = obtener_puertos_en_escucha()
 
     # Agregar debajo de la IP de Red:
-    print(f" 🌐 Trafico de Red:    ⬇️ {mb_recibidos} MB recibidos | ⬆️ {mb_enviados} MB enviados")
-
     # Evaluación del Estado del Sistema
     if ram_uso >= 80 or disco_uso >= 80 or cpu_pct >= 80:
         estado_general = "CRITICAL"
@@ -165,6 +163,15 @@ def ejecutar_linux_ops():
     print(f" ⏱️  Fecha y Hora:    {fecha_actual}")
     print(f" ⏳ Uptime:          {uptime_str} (Usuarios activos: {usuarios_activos})")
     print(f" 📊 Estado general: {color_estado}{estado_general}{RESET}  (Carga CPU 1m: {cpu_1min:.2f})")
+
+    # --- SECCIÓN DE RED Y CONECTIVIDAD ---
+    net_io = psutil.net_io_counters()
+    bytes_recv_mb = round(net_io.bytes_recv / (1024 * 1024), 1)
+    bytes_sent_mb = round(net_io.bytes_sent / (1024 * 1024), 1)
+
+    print(f"\n{AZUL}= = = RED Y CONECTIVIDAD = = ={RESET}")
+    print(f"  📊 Trafico de Red:   ⬇️  {bytes_recv_mb} MB recibidos  |  ⬆️  {bytes_sent_mb} MB enviados")
+
     print(f"\n{AZUL}= = = AUDITORÍA DE SEGURIDAD (PUERTOS EN ESCUCHA) = = ={RESET}")
 
     if puertos_escucha:
