@@ -105,7 +105,7 @@ def get_sys_info():
 
 def print_friendly_inventory():
     data = get_sys_info()
-    print("\n📋 RESUMEN DEL EQUIPO (FÁCIL LECTURA)")
+    print("\n📋 ============== HARDWARE Y SISTEMA BASE ============== ")
     print("-" * 55)
     print(f"💻 Nombre del equipo:    {data['equipo']}")
     print(f"🐧 Sistema Operativo:    {data['sistema_operativo']} ({data['arquitectura']})")

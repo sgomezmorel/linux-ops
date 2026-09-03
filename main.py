@@ -128,6 +128,34 @@ def obtener_puertos_en_escucha():
     # Ordenamos por numero de puerto
     return sorted(puertos, key=lambda x: x[0])
 
+def obtener_estado_servicios():
+    servicios = ["ssh", "ufw", "docker", "cron"]
+    estado_servicios = []
+
+    for srv in servicios:
+        try:
+            res = subprocess.run(
+                ["systemctl", "is-active", srv],
+                capture_output=True,
+                text=True
+            )
+            estado = res.stdout.strip()
+
+            if estado == "active":
+                fmt = f"{VERDE}Activo{RESET}"
+            elif estado == "inactive":
+                fmt = f"{AMARILLO}Inactivo{RESET}"
+            elif estado == "failed":
+                fmt = f"\033[91mFallido{RESET}"
+            else:
+                fmt = f"No instalado/Desconocido ({estado})"
+
+            estado_servicios.append((srv,fmt))
+        except Exception:
+            estado_servicios.append((srv, "Error al consultar"))
+
+    return estado_servicios
+
 def ejecutar_linux_ops():
     archivo_log = os.path.join(RUTA_BASE, "reporte.json")
     fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -143,6 +171,7 @@ def ejecutar_linux_ops():
     top_proc = obtener_top_procesos(3)
     mb_recibidos, mb_enviados = obtener_trafico_red()
     puertos_escucha = obtener_puertos_en_escucha()
+    servicios = obtener_estado_servicios()
 
     # Agregar debajo de la IP de Red:
     # Evaluación del Estado del Sistema
@@ -169,10 +198,10 @@ def ejecutar_linux_ops():
     bytes_recv_mb = round(net_io.bytes_recv / (1024 * 1024), 1)
     bytes_sent_mb = round(net_io.bytes_sent / (1024 * 1024), 1)
 
-    print(f"\n{AZUL}= = = RED Y CONECTIVIDAD = = ={RESET}")
+    print(f"\n{AZUL}========= RED Y CONECTIVIDAD ========={RESET}")
     print(f"  📊 Trafico de Red:   ⬇️  {bytes_recv_mb} MB recibidos  |  ⬆️  {bytes_sent_mb} MB enviados")
 
-    print(f"\n{AZUL}= = = AUDITORÍA DE SEGURIDAD (PUERTOS EN ESCUCHA) = = ={RESET}")
+    print(f"\n{AZUL}========= AUDITORÍA DE SEGURIDAD (PUERTOS EN ESCUCHA) ========={RESET}")
 
     if puertos_escucha:
         for puerto, proto, proc, pid in puertos_escucha:
@@ -181,11 +210,15 @@ def ejecutar_linux_ops():
     else:
         print("  • No se detectaron puertos en escucha activos en la red.")
 
+    print(f"\n{AZUL}========= SERVICIOS CRITICOS (SYSTEMD) ========={RESET}")
+    for srv, estado in servicios:
+        print(f"  • {srv:<12}: {estado}")
+
     # 2. INVENTARIO DE HARDWARE
     if inventory and hasattr(inventory, 'print_friendly_inventory'):
         inventory.print_friendly_inventory()
     else:
-        print(f"\n{AZUL}= = = INVENTARIO DE HARDWARE = = ={RESET}")
+        print(f"\n{AZUL}========= INVENTARIO DE HARDWARE ========={RESET}")
         ram_gb = round(psutil.virtual_memory().total / (1024 ** 3), 2)
         datos_inv = {
             "os": os.uname().sysname,
