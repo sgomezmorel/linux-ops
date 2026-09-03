@@ -326,5 +326,33 @@
                 "ram_pct": 3.5
             }
         ]
+    },
+    {
+        "timestamp": "2026-09-02 22:06:43",
+        "uptime": "3h 24m",
+        "usuarios_activos": 0,
+        "estado": "WARNING",
+        "cpu_carga_1min": 0.0,
+        "ram_uso_pct": "38.0%",
+        "disco_uso_pct": "66.4%",
+        "red_mb_recibidos": 26.9,
+        "red_mb_enviados": 1.5,
+        "top_procesos_ram": [
+            {
+                "pid": 3068,
+                "nombre": "xfwm4",
+                "ram_pct": 6.8
+            },
+            {
+                "pid": 2726,
+                "nombre": "Xorg",
+                "ram_pct": 6.1
+            },
+            {
+                "pid": 74222,
+                "nombre": "qterminal",
+                "ram_pct": 3.5
+            }
+        ]
     }
 ]
