@@ -78,6 +78,56 @@ def obtener_trafico_red():
     bytes_recibidos = io_red.bytes_recv / (1024 * 1024)
     return round (bytes_recibidos, 1), round(bytes_enviados, 1)
 
+def obtener_puertos_en_escucha():
+    puertos = []
+    try:
+        resultado = subprocess.run(
+            ["sudo", "ss", "-tulnp"],
+            capture_output=True,
+            text=True
+        )
+        lineas = resultado.stdout.splitlines()[1:]
+
+        for linea in lineas:
+            partes = linea.split()
+            if len(partes) >= 5:
+               proto = partes[0].upper()
+               direccion_local = partes[4]
+               puerto = direccion_local.split(":")[-1]
+
+               proceso = "Desconocido"
+               if len(partes) >= 7:
+                  proceso_info = partes[6]
+                  if '="' in proceso_info:
+                      proceso = proceso_info.split('="')[1].split('"')[0]
+
+               if puerto.isdigit():
+                   puerto.append((int(puerto), proto, proceso))
+    except Exception:
+        pass
+
+    if not puertos:
+        try:
+            for conn in psutil.net_connections(kind='inet'):
+                if conn.status == psutil.CONN_LISTEN:
+                    puerto = conn.laddr.port
+                    proto = "TCP" if conn.type == 1 else "UDP"
+                    proc = "Protegido/Sistema"
+                    if conn.pid:
+                        try:
+                            proc = psutil.Process(conn.pid).name()
+                        except Exception:
+                            pass
+                    puertos.append((puerto, proto, proc))
+        except Exception:
+            pass
+
+    puertos_unicos = list({(p[0], p[1]): p for p in puertos}.values())
+    return sorted(puertos_unicos, key=lambda x: x[0])
+
+    # Ordenamos por numero de puerto
+    return sorted(puertos, key=lambda x: x[0])
+
 def ejecutar_linux_ops():
     archivo_log = os.path.join(RUTA_BASE, "reporte.json")
     fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -92,6 +142,7 @@ def ejecutar_linux_ops():
     usuarios_activos = len(psutil.users())
     top_proc = obtener_top_procesos(3)
     mb_recibidos, mb_enviados = obtener_trafico_red()
+    puertos_escucha = obtener_puertos_en_escucha()
 
     # Agregar debajo de la IP de Red:
     print(f" 🌐 Trafico de Red:    ⬇️ {mb_recibidos} MB recibidos | ⬆️ {mb_enviados} MB enviados")
@@ -114,6 +165,14 @@ def ejecutar_linux_ops():
     print(f" ⏱️  Fecha y Hora:    {fecha_actual}")
     print(f" ⏳ Uptime:          {uptime_str} (Usuarios activos: {usuarios_activos})")
     print(f" 📊 Estado general: {color_estado}{estado_general}{RESET}  (Carga CPU 1m: {cpu_1min:.2f})")
+    print(f"\n{AZUL}= = = AUDITORÍA DE SEGURIDAD (PUERTOS EN ESCUCHA) = = ={RESET}")
+
+    if puertos_escucha:
+        for puerto, proto, proc, pid in puertos_escucha:
+            pid_str = f"PID: {pid}" if pid else "PID: N/A"
+            print(f"  • Puerto {puerto:<5} [{proto}] | Servicio/Proceso: {proc}")
+    else:
+        print("  • No se detectaron puertos en escucha activos en la red.")
 
     # 2. INVENTARIO DE HARDWARE
     if inventory and hasattr(inventory, 'print_friendly_inventory'):

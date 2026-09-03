@@ -186,5 +186,145 @@
                 "ram_pct": 4.1
             }
         ]
+    },
+    {
+        "timestamp": "2026-09-01 17:50:39",
+        "uptime": "1h 21m",
+        "usuarios_activos": 0,
+        "estado": "WARNING",
+        "cpu_carga_1min": 0.0068359375,
+        "ram_uso_pct": "43.5%",
+        "disco_uso_pct": "66.3%",
+        "red_mb_recibidos": 0.4,
+        "red_mb_enviados": 0.1,
+        "top_procesos_ram": [
+            {
+                "pid": 1092,
+                "nombre": "xfwm4",
+                "ram_pct": 6.7
+            },
+            {
+                "pid": 654,
+                "nombre": "Xorg",
+                "ram_pct": 6.0
+            },
+            {
+                "pid": 1006,
+                "nombre": "VBoxClient",
+                "ram_pct": 4.1
+            }
+        ]
+    },
+    {
+        "timestamp": "2026-09-02 21:23:24",
+        "uptime": "2h 41m",
+        "usuarios_activos": 0,
+        "estado": "WARNING",
+        "cpu_carga_1min": 0.0,
+        "ram_uso_pct": "37.7%",
+        "disco_uso_pct": "66.4%",
+        "red_mb_recibidos": 26.8,
+        "red_mb_enviados": 1.5,
+        "top_procesos_ram": [
+            {
+                "pid": 3068,
+                "nombre": "xfwm4",
+                "ram_pct": 6.8
+            },
+            {
+                "pid": 2726,
+                "nombre": "Xorg",
+                "ram_pct": 6.1
+            },
+            {
+                "pid": 74222,
+                "nombre": "qterminal",
+                "ram_pct": 3.4
+            }
+        ]
+    },
+    {
+        "timestamp": "2026-09-02 21:23:59",
+        "uptime": "2h 42m",
+        "usuarios_activos": 0,
+        "estado": "WARNING",
+        "cpu_carga_1min": 0.0,
+        "ram_uso_pct": "38.0%",
+        "disco_uso_pct": "66.4%",
+        "red_mb_recibidos": 26.8,
+        "red_mb_enviados": 1.5,
+        "top_procesos_ram": [
+            {
+                "pid": 3068,
+                "nombre": "xfwm4",
+                "ram_pct": 6.8
+            },
+            {
+                "pid": 2726,
+                "nombre": "Xorg",
+                "ram_pct": 6.1
+            },
+            {
+                "pid": 74222,
+                "nombre": "qterminal",
+                "ram_pct": 3.5
+            }
+        ]
+    },
+    {
+        "timestamp": "2026-09-02 21:44:37",
+        "uptime": "3h 2m",
+        "usuarios_activos": 0,
+        "estado": "WARNING",
+        "cpu_carga_1min": 0.0,
+        "ram_uso_pct": "37.7%",
+        "disco_uso_pct": "66.4%",
+        "red_mb_recibidos": 26.9,
+        "red_mb_enviados": 1.5,
+        "top_procesos_ram": [
+            {
+                "pid": 3068,
+                "nombre": "xfwm4",
+                "ram_pct": 6.8
+            },
+            {
+                "pid": 2726,
+                "nombre": "Xorg",
+                "ram_pct": 6.1
+            },
+            {
+                "pid": 74222,
+                "nombre": "qterminal",
+                "ram_pct": 3.5
+            }
+        ]
+    },
+    {
+        "timestamp": "2026-09-02 21:44:45",
+        "uptime": "3h 3m",
+        "usuarios_activos": 0,
+        "estado": "WARNING",
+        "cpu_carga_1min": 0.0,
+        "ram_uso_pct": "37.9%",
+        "disco_uso_pct": "66.4%",
+        "red_mb_recibidos": 26.9,
+        "red_mb_enviados": 1.5,
+        "top_procesos_ram": [
+            {
+                "pid": 3068,
+                "nombre": "xfwm4",
+                "ram_pct": 6.8
+            },
+            {
+                "pid": 2726,
+                "nombre": "Xorg",
+                "ram_pct": 6.1
+            },
+            {
+                "pid": 74222,
+                "nombre": "qterminal",
+                "ram_pct": 3.5
+            }
+        ]
     }
 ]
